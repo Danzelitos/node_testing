@@ -45,24 +45,47 @@ function install_dependencies() {
   sudo docker run hello-world
 }
 
-function install_trap() {
-  install_dependencies
-  sleep 5
-  curl -L https://app.drosera.io/install | bash
-  sleep 3
-  source /root/.bashrc
-  droseraup
+function install_drosera_foundry_bun() {
+    while true; do
+        echo -e "${CLR_INFO}Выберите, что хотите установить:${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.1) 🧪 Установка Drosera CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.2) 🧱 Установка Foundry CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.3) 🍞 Установка Bun${CLR_RESET}"
+        echo -e "${CLR_WARNING}1.4) 🔙 Вернуться в главное меню${CLR_RESET}"
+        read -p "Введите номер действия: " sub_choice
 
-  sleep 5
-
-  curl -L https://foundry.paradigm.xyz | bash
-  sleep 3
-  source /root/.bashrc
-  foundryup
-
-  sleep 5
-
-  curl -fsSL https://bun.sh/install | bash
+        case $sub_choice in
+            1.1)
+                echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
+                curl -L https://app.drosera.io/install | bash
+                sleep 5
+                source ~/.bashrc
+                sleep 3
+                droseraup
+                ;;
+            1.2)
+                echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
+                curl -L https://foundry.paradigm.xyz | bash
+                sleep 5
+                source ~/.bashrc
+                sleep 3
+                foundryup
+                ;;
+            1.3)
+                echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
+                curl -fsSL https://bun.sh/install | bash
+                sleep 3
+                source ~/.bashrc
+                ;;
+            1.4)
+                echo -e "${CLR_INFO}🔙 Возвращение в главное меню...${CLR_RESET}"
+                break
+                ;;
+            *)
+                echo -e "${CLR_ERROR}❌ Неверный выбор! Повторите попытку.${CLR_RESET}"
+                ;;
+        esac
+    done
 }
 
 function deploy_trap() {
@@ -206,7 +229,7 @@ function show_menu() {
     read -r choice
 
     case $choice in
-        1) install_trap ;;
+        1) install_drosera_foundry_bun ;;
         2) deploy_trap ;;
         3) create_operator ;;
         4) install_cli ;;
