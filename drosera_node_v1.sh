@@ -46,7 +46,7 @@ function install_dependencies() {
 }
 
 function install_trap() {
-  install_dependencies()
+  install_dependencies
   sleep 5
   curl -L https://app.drosera.io/install | bash
   sleep 3
