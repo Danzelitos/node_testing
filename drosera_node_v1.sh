@@ -193,13 +193,13 @@ function delete_node () {
 # Главное меню
 function show_menu() {
     show_logo
-    echo -e "${CLR_GREEN}1) ⚙️ Подготовка Trap${CLR_RESET}"
-    echo -e "${CLR_GREEN}2) ⛓️ Установить Trap${CLR_RESET}"
-    echo -e "${CLR_GREEN}3) 🖥️ Создать оператора ноды${CLR_RESET}"
+    echo -e "${CLR_GREEN}1) ⚙️  Подготовка Trap${CLR_RESET}"
+    echo -e "${CLR_GREEN}2) ⛓️  Установить Trap${CLR_RESET}"
+    echo -e "${CLR_GREEN}3) 🖥️  Создать оператора ноды${CLR_RESET}"
     echo -e "${CLR_GREEN}3) 🚀 Запуск ноды${CLR_RESET}"
     echo -e "${CLR_GREEN}2) 🔄 Перезапустить ноду${CLR_RESET}"
     echo -e "${CLR_GREEN}3) 📜 Просмотр логов${CLR_RESET}"
-    echo -e "${CLR_GREEN}4) 🗑️ Удалить ноду${CLR_RESET}"
+    echo -e "${CLR_GREEN}4) 🗑️  Удалить ноду${CLR_RESET}"
     echo -e "${CLR_GREEN}5) ❌ Выйти${CLR_RESET}"
 
     echo -e "${CLR_INFO}Выберите действие:${CLR_RESET}"
