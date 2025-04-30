@@ -32,19 +32,41 @@ function install_dependencies() {
 }
 
 function install_drosera_foundry_bun() {
-    echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
-    curl -L https://app.drosera.io/install | bash
-    source ~/.bashrc
-    droseraup
+    while true; do
+        echo -e "${CLR_INFO}Выберите, что хотите установить:${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.1) 🧪 Установка Drosera CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.2) 🧱 Установка Foundry CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}1.3) 🍞 Установка Bun${CLR_RESET}"
+        echo -e "${CLR_WARNING}1.4) 🔙 Вернуться в главное меню${CLR_RESET}"
+        read -p "Введите номер действия: " sub_choice
 
-    echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
-    curl -L https://foundry.paradigm.xyz | bash
-    source ~/.bashrc
-    foundryup
-
-    echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
-    curl -fsSL https://bun.sh/install | bash
-    source ~/.bashrc
+        case $sub_choice in
+            1.1)
+                echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
+                curl -L https://app.drosera.io/install | bash
+                source ~/.bashrc
+                droseraup
+                ;;
+            1.2)
+                echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
+                curl -L https://foundry.paradigm.xyz | bash
+                source ~/.bashrc
+                foundryup
+                ;;
+            1.3)
+                echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
+                curl -fsSL https://bun.sh/install | bash
+                source ~/.bashrc
+                ;;
+            1.4)
+                echo -e "${CLR_INFO}🔙 Возвращение в главное меню...${CLR_RESET}"
+                break
+                ;;
+            *)
+                echo -e "${CLR_ERROR}❌ Неверный выбор! Повторите попытку.${CLR_RESET}"
+                ;;
+        esac
+    done
 }
 
 function deploy_trap() {
