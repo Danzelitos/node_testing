@@ -207,8 +207,8 @@ function check_logs () {
 }
 
 function restart_node () {
-  echo -e "${YELLOW}Перезапуск ноды: ${NC} "
   sudo systemctl restart drosera
+  echo -e "${YELLOW}Нода Drosera успешно перезапущена ${NC} "
 }
 
 function delete_node () {
