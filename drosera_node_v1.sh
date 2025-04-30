@@ -48,14 +48,14 @@ function install_dependencies() {
 function install_drosera_foundry_bun() {
     while true; do
         echo -e "${CLR_INFO}Выберите, что хотите установить:${CLR_RESET}"
-        echo -e "${CLR_GREEN}1.1) 🧪 Установка Drosera CLI${CLR_RESET}"
-        echo -e "${CLR_GREEN}1.2) 🧱 Установка Foundry CLI${CLR_RESET}"
-        echo -e "${CLR_GREEN}1.3) 🍞 Установка Bun${CLR_RESET}"
-        echo -e "${CLR_WARNING}1.4) 🔙 Вернуться в главное меню${CLR_RESET}"
+        echo -e "${CLR_GREEN}1) 🧪 Установка Drosera CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}2) 🧱 Установка Foundry CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}3) 🍞 Установка Bun${CLR_RESET}"
+        echo -e "${CLR_WARNING}4) 🔙 Вернуться в главное меню${CLR_RESET}"
         read -p "Введите номер действия: " sub_choice
 
         case $sub_choice in
-            1.1)
+            1)
                 echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
                 curl -L https://app.drosera.io/install | bash
                 sleep 5
@@ -63,7 +63,7 @@ function install_drosera_foundry_bun() {
                 sleep 3
                 droseraup
                 ;;
-            1.2)
+            2)
                 echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
                 curl -L https://foundry.paradigm.xyz | bash
                 sleep 5
@@ -71,15 +71,15 @@ function install_drosera_foundry_bun() {
                 sleep 3
                 foundryup
                 ;;
-            1.3)
+            3)
                 echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
                 curl -fsSL https://bun.sh/install | bash
                 sleep 3
                 source ~/.bashrc
                 ;;
-            1.4)
+            4)
                 echo -e "${CLR_INFO}🔙 Возвращение в главное меню...${CLR_RESET}"
-                break
+                show_menu
                 ;;
             *)
                 echo -e "${CLR_ERROR}❌ Неверный выбор! Повторите попытку.${CLR_RESET}"
@@ -112,20 +112,31 @@ function deploy_trap() {
 
   echo -e "${YELLOW}Введите ваш приватный ключ от EVM кошелька:${NC} "
   read PRIV_KEY
-
+  cd my-drosera-trap
   DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
 
   echo -e "${YELLOW}Выполните дальнейшие действия по гайду${NC} "
 
-  # drosera dryrun
+  echo -e "${YELLOW}Вы выполнили действие из гайда (Send Bloom Boost в дашборде)? (y/n): ${NC}"
+  read -r CONFIRM
+    
+  if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
+    echo -e "${GREEN}▶ Выполняется команда drosera dryrun...${NC}"
+    drosera dryrun
+  else
+    echo -e "${RED}⏳ Пожалуйста, выполните требуемое действие (Send Bloom Boost), а затем вручную запустите команду:${NC}"
+    echo -e "${CYAN}drosera dryrun${NC}"
+  fi
+
 }
 
 function create_operator () {
-  read -p "Введите ваш адрес кошелька: " WALLET && sed -i "/^private_trap/c\private_trap = true" my-drosera-trap/drosera.toml && sed -i "/^whitelist/c\whitelist = [\"$WALLET\"]" my-drosera-trap/drosera.toml
+  read -p "Введите ваш адрес кошелька: " WALLET
+  sed -i "/^private_trap/c\private_trap = true" my-drosera-trap/drosera.toml 
+  sed -i "/^whitelist/c\whitelist = [\"$WALLET\"]" my-drosera-trap/drosera.toml
   echo -e "${YELLOW}Введите ваш приватный ключ от EVM кошелька:${NC} "
-  read PRIV_KEY
-
-  DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
+  read  PRIV_KEY
+  cd my-drosera-trap &&  DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
 }
 
 function install_cli () {
@@ -181,6 +192,7 @@ EOF"
   # Allow Drosera ports
   sudo ufw allow 31313/tcp
   sudo ufw allow 31314/tcp
+  sudo ufw allow 30304/tcp
   sleep 3
   
   sudo systemctl daemon-reload
@@ -219,11 +231,11 @@ function show_menu() {
     echo -e "${CLR_GREEN}1) ⚙️  Подготовка Trap${CLR_RESET}"
     echo -e "${CLR_GREEN}2) ⛓️  Установить Trap${CLR_RESET}"
     echo -e "${CLR_GREEN}3) 🖥️  Создать оператора ноды${CLR_RESET}"
-    echo -e "${CLR_GREEN}3) 🚀 Запуск ноды${CLR_RESET}"
-    echo -e "${CLR_GREEN}2) 🔄 Перезапустить ноду${CLR_RESET}"
-    echo -e "${CLR_GREEN}3) 📜 Просмотр логов${CLR_RESET}"
-    echo -e "${CLR_GREEN}4) 🗑️  Удалить ноду${CLR_RESET}"
-    echo -e "${CLR_GREEN}5) ❌ Выйти${CLR_RESET}"
+    echo -e "${CLR_GREEN}4) 🚀 Запуск ноды${CLR_RESET}"
+    echo -e "${CLR_GREEN}5) 🔄 Перезапустить ноду${CLR_RESET}"
+    echo -e "${CLR_GREEN}6) 📜 Просмотр логов${CLR_RESET}"
+    echo -e "${CLR_GREEN}7) 🗑️  Удалить ноду${CLR_RESET}"
+    echo -e "${CLR_GREEN}8) ❌ Выйти${CLR_RESET}"
 
     echo -e "${CLR_INFO}Выберите действие:${CLR_RESET}"
     read -r choice
@@ -233,8 +245,8 @@ function show_menu() {
         2) deploy_trap ;;
         3) create_operator ;;
         4) install_cli ;;
-        5) check_logs ;;
-        6) restart_node ;;
+        5) restart_node ;;
+        6) check_logs ;;
         7) remove_node ;;
         8) echo -e "${CLR_SUCCESS}Выход...${CLR_RESET}" && exit 0 ;;
         *) echo -e "${CLR_ERROR}Неверный выбор! Попробуйте снова.${CLR_RESET}" && show_menu ;;
