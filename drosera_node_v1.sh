@@ -8,7 +8,7 @@ CLR_GREEN='\033[0;32m'
 CLR_RESET='\033[0m'
 
 function show_logo() {
-    echo -e "$CLR_GREEN}**********************************************************${CLR_RESET}"
+    echo -e "${CLR_GREEN}**********************************************************${CLR_RESET}"
     echo -e "${CLR_GREEN}          Установочный скрипт для ноды Drosera             ${CLR_RESET}"
     echo -e "${CLR_GREEN}**********************************************************${CLR_RESET}"
     curl -s https://raw.githubusercontent.com/profitnoders/Profit_Nodes/refs/heads/main/logo_new.sh | bash
