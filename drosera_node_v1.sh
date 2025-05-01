@@ -105,15 +105,16 @@ function deploy_trap() {
 
   forge init -t drosera-network/trap-foundry-template
 
-  curl -fsSL https://bun.sh/install | bash
-  bun install
+  cd $HOME/my-drosera-trap && curl -fsSL https://bun.sh/install | bash
+  cd $HOME/my-drosera-trap && bun install
   sleep 3
   source $HOME/.bashrc
+  sleep 3
   forge build
 
   echo -e "${CLR_INFO}Введите ваш приватный ключ от EVM кошелька:${CLR_RESET} "
   read PRIV_KEY
-  cd my-drosera-trap
+  cd $HOME/my-drosera-trap
   DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
 
   echo -e "${CLR_INFO}Выполните дальнейшие действия по гайду${CLR_RESET} "
