@@ -55,7 +55,7 @@ function install_drosera_foundry_bun() {
 
         case $sub_choice in
             1) 
-                install_dependencies
+                install_dependencies ;;
             2)
                 echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
                 curl -L https://app.drosera.io/install | bash
