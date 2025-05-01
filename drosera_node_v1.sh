@@ -1,18 +1,16 @@
 #!/bin/bash
 
-# Цвета текста
-RED='\033[0;31m'
-GREEN='\033[0;32m'
-YELLOW='\033[0;33m'
-BLUE='\033[0;34m'
-PURPLE='\033[0;35m'
-CYAN='\033[0;36m'
-NC='\033[0m'
+CLR_INFO='\033[1;97;44m'  # Белый текст на синем фоне
+CLR_SUCCESS='\033[1;97;42m'  # Белый текст на зеленом фоне
+CLR_WARNING='\033[1;30;103m'  # Черный текст на желтом фоне
+CLR_ERROR='\033[1;97;41m'  # Белый текст на красном фоне
+CLR_GREEN='\033[0;32m'
+CLR_RESET='\033[0m'
 
 function show_logo() {
-    echo -e "${CLR_SUCCESS}**********************************************************${CLR_RESET}"
-    echo -e "${CLR_INFO}          Установочный скрипт для Drosera             ${CLR_RESET}"
-    echo -e "${CLR_SUCCESS}**********************************************************${CLR_RESET}"
+    echo -e "$CLR_GREEN}**********************************************************${CLR_RESET}"
+    echo -e "${CLR_GREEN}          Установочный скрипт для ноды Drosera             ${CLR_RESET}"
+    echo -e "${CLR_GREEN}**********************************************************${CLR_RESET}"
     curl -s https://raw.githubusercontent.com/profitnoders/Profit_Nodes/refs/heads/main/logo_new.sh | bash
 }
 
@@ -48,14 +46,17 @@ function install_dependencies() {
 function install_drosera_foundry_bun() {
     while true; do
         echo -e "${CLR_INFO}Выберите, что хотите установить:${CLR_RESET}"
-        echo -e "${CLR_GREEN}1) 🧪 Установка Drosera CLI${CLR_RESET}"
-        echo -e "${CLR_GREEN}2) 🧱 Установка Foundry CLI${CLR_RESET}"
-        echo -e "${CLR_GREEN}3) 🍞 Установка Bun${CLR_RESET}"
-        echo -e "${CLR_WARNING}4) 🔙 Вернуться в главное меню${CLR_RESET}"
+        echo -e "${CLR_GREEN}1) 🔧 Установить зависимости${CLR_RESET}"
+        echo -e "${CLR_GREEN}2) 🧪 Установка Drosera CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}3) 🧱 Установка Foundry CLI${CLR_RESET}"
+        echo -e "${CLR_GREEN}4) 🍞 Установка Bun${CLR_RESET}"
+        echo -e "${CLR_WARNING}5) 🔙 Вернуться в главное меню${CLR_RESET}"
         read -p "Введите номер действия: " sub_choice
 
         case $sub_choice in
-            1)
+            1) 
+                install_dependencies
+            2)
                 echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
                 curl -L https://app.drosera.io/install | bash
                 sleep 5
@@ -63,7 +64,7 @@ function install_drosera_foundry_bun() {
                 sleep 3
                 droseraup
                 ;;
-            2)
+            3)
                 echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
                 curl -L https://foundry.paradigm.xyz | bash
                 sleep 5
@@ -71,13 +72,13 @@ function install_drosera_foundry_bun() {
                 sleep 3
                 foundryup
                 ;;
-            3)
+            4)
                 echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
                 curl -fsSL https://bun.sh/install | bash
                 sleep 3
                 source ~/.bashrc
                 ;;
-            4)
+            5)
                 echo -e "${CLR_INFO}🔙 Возвращение в главное меню...${CLR_RESET}"
                 show_menu
                 ;;
@@ -92,10 +93,10 @@ function deploy_trap() {
   mkdir my-drosera-trap
   cd my-drosera-trap
 
-  echo -e "${YELLOW}Введите вашу Github почту:${NC} "
+  echo -e "${CLR_INFO}Введите вашу Github почту:${CLR_RESET} "
   read GITHUB_EMAIL
   # Запрос Username
-  echo -e "${YELLOW}Введите ваш Github юзернейм:${NC} "
+  echo -e "${CLR_INFO}Введите ваш Github юзернейм:${CLR_RESET} "
   read GITHUB_USERNAME
         
   # Применяем настройки git
@@ -110,22 +111,22 @@ function deploy_trap() {
   source $HOME/.bashrc
   forge build
 
-  echo -e "${YELLOW}Введите ваш приватный ключ от EVM кошелька:${NC} "
+  echo -e "${CLR_INFO}Введите ваш приватный ключ от EVM кошелька:${CLR_RESET} "
   read PRIV_KEY
   cd my-drosera-trap
   DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
 
-  echo -e "${YELLOW}Выполните дальнейшие действия по гайду${NC} "
+  echo -e "${CLR_INFO}Выполните дальнейшие действия по гайду${CLR_RESET} "
 
-  echo -e "${YELLOW}Вы выполнили действие из гайда (Send Bloom Boost в дашборде)? (y/n): ${NC}"
+  echo -e "${CLR_WARNING}Вы выполнили действие из гайда (Send Bloom Boost в дашборде)? (y/n): ${CLR_RESET}"
   read -r CONFIRM
     
   if [[ "$CONFIRM" == "y" || "$CONFIRM" == "Y" ]]; then
-    echo -e "${GREEN}▶ Выполняется команда drosera dryrun...${NC}"
+    echo -e "${CLR_WARNING}▶ Выполняется команда drosera dryrun...${CLR_RESET}"
     drosera dryrun
   else
-    echo -e "${RED}⏳ Пожалуйста, выполните требуемое действие (Send Bloom Boost), а затем вручную запустите команду:${NC}"
-    echo -e "${CYAN}drosera dryrun${NC}"
+    echo -e "${CLR_ERROR}⏳ Пожалуйста, выполните требуемое действие (Send Bloom Boost), а затем вручную запустите команду:${CLR_RESET}"
+    echo -e "${CLR_INFO}drosera dryrun${CLR_RESET}"
   fi
 
 }
@@ -134,7 +135,7 @@ function create_operator () {
   read -p "Введите ваш адрес кошелька: " WALLET
   sed -i "/^private_trap/c\private_trap = true" my-drosera-trap/drosera.toml 
   sed -i "/^whitelist/c\whitelist = [\"$WALLET\"]" my-drosera-trap/drosera.toml
-  echo -e "${YELLOW}Введите ваш приватный ключ от EVM кошелька:${NC} "
+  echo -e "${CLR_WARNING}Введите ваш приватный ключ от EVM кошелька:${CLR_RESET} "
   read  PRIV_KEY
   cd my-drosera-trap &&  DROSERA_PRIVATE_KEY="$PRIV_KEY" drosera apply
 }
@@ -154,11 +155,11 @@ function install_cli () {
 
   docker pull ghcr.io/drosera-network/drosera-operator:latest
 
-  echo -e "${YELLOW}Введите ваш приватный ключ от EVM кошелька:${NC} "
+  echo -e "${CLR_WARNING}Введите ваш приватный ключ от EVM кошелька:${CLR_RESET} "
   read PRIV_KEY
   drosera-operator register --eth-rpc-url https://ethereum-holesky-rpc.publicnode.com --eth-private-key "$PRIV_KEY"
 
-  echo -e "${YELLOW}Введите ваш IP сервера:${NC} "
+  echo -e "${CLR_WARNING}Введите ваш IP сервера:${CLR_RESET} "
   read IP_ADDRESS
 
 sudo bash -c "cat <<EOF > /etc/systemd/system/drosera.service
@@ -202,19 +203,19 @@ EOF"
 }
 
 function check_logs () {
-  echo -e "${YELLOW}Логи ноды Drosera: ${NC} "
+  echo -e "${CLR_INFO}Логи ноды Drosera: ${CLR_RESET} "
   journalctl -u drosera.service -f
 }
 
 function restart_node () {
   sudo systemctl restart drosera
-  echo -e "${YELLOW}Нода Drosera успешно перезапущена ${NC} "
+  echo -e "${CLR_INFO}Нода Drosera успешно перезапущена ${CLR_RESET} "
 }
 
 function delete_node () {
   read -p "⚠ Удалить ноду Drosera? (y/n): " CONFIRM
   if [[ "$CONFIRM" == "y" ]]; then
-    echo -e "${YELLOW}Удаляю ноду Drosera...${NC} "
+    echo -e "${CLR_INFO}Удаляю ноду Drosera...${CLR_RESET} "
     sudo systemctl stop drosera.service
     sudo systemctl disable drosera.service
     sudo rm /etc/systemd/system/drosera.service
