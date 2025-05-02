@@ -60,23 +60,21 @@ function install_drosera_foundry_bun() {
                 echo -e "${CLR_INFO}▶ Установка Drosera CLI...${CLR_RESET}"
                 curl -L https://app.drosera.io/install | bash
                 sleep 5
-                source ~/.bashrc
-                sleep 3
+                export PATH="$HOME/.drosera/bin:$PATH"
                 droseraup
                 ;;
             3)
                 echo -e "${CLR_INFO}▶ Установка Foundry CLI...${CLR_RESET}"
                 curl -L https://foundry.paradigm.xyz | bash
-                sleep 5
-                source ~/.bashrc
-                sleep 3
+                sleep 2
+                export PATH="$HOME/.foundry/bin:$PATH"
                 foundryup
                 ;;
             4)
                 echo -e "${CLR_INFO}▶ Установка Bun...${CLR_RESET}"
                 curl -fsSL https://bun.sh/install | bash
-                sleep 3
-                source ~/.bashrc
+                export PATH="$HOME/.bun/bin:$PATH"
+                bun --version
                 ;;
             5)
                 echo -e "${CLR_INFO}🔙 Возвращение в главное меню...${CLR_RESET}"
