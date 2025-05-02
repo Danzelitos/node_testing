@@ -190,8 +190,8 @@ EOF"
   sudo ufw enable
   
   # Allow Drosera ports
-  sudo ufw allow 31313/tcp
-  sudo ufw allow 31314/tcp
+  sudo ufw allow 32323/tcp
+  sudo ufw allow 32324/tcp
   sudo ufw allow 30304/tcp
   sleep 3
   
