@@ -247,7 +247,7 @@ function show_menu() {
         4) install_cli ;;
         5) restart_node ;;
         6) check_logs ;;
-        7) remove_node ;;
+        7) delete_node ;;
         8) echo -e "${CLR_SUCCESS}Выход...${CLR_RESET}" && exit 0 ;;
         *) echo -e "${CLR_ERROR}Неверный выбор! Попробуйте снова.${CLR_RESET}" && show_menu ;;
     esac
