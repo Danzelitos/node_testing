@@ -125,7 +125,7 @@ function deploy_trap() {
     drosera dryrun
   else
     echo -e "${CLR_ERROR}⏳ Пожалуйста, выполните требуемое действие (Send Bloom Boost), а затем вручную запустите команду:${CLR_RESET}"
-    echo -e "${CLR_INFO}drosera dryrun${CLR_RESET}"
+    echo -e "${CLR_INFO}cd my-drosera-trap && drosera dryrun${CLR_RESET}"
   fi
 
 }
@@ -171,7 +171,7 @@ User=$USER
 Restart=always
 RestartSec=15
 LimitNOFILE=65535
-ExecStart=$(which drosera-operator) node --db-file-path \$HOME/.drosera.db --network-p2p-port 31313 --server-port 31314 \\
+ExecStart=$(which drosera-operator) node --db-file-path \$HOME/.drosera.db --network-p2p-port 32323 --server-port 32324 \\
     --eth-rpc-url https://ethereum-holesky-rpc.publicnode.com \\
     --eth-backup-rpc-url https://1rpc.io/holesky \\
     --drosera-address 0xea08f7d533C2b9A62F40D5326214f39a8E3A32F8 \\
@@ -207,6 +207,7 @@ function check_logs () {
 }
 
 function restart_node () {
+  systemctl daemon-reload
   sudo systemctl restart drosera
   echo -e "${CLR_INFO}Нода Drosera успешно перезапущена ${CLR_RESET} "
 }
