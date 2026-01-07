@@ -586,8 +586,7 @@ submenu_manage(){
 }
 
 menu(){
-  echo ""
-  echo "===== Lava Mainnet Manager (${LAVA_VERSION}) ====="
+  show_logo()
   echo "${CLR_INFO}1) Install node${CLR_RESET}"
   echo "${CLR_INFO}2) Run validator (manual amount input)${CLR_RESET}"
   echo "${CLR_INFO}3) Node management → (unjail / fee-check / auto self-delegation / voting)${CLR_RESET}"
