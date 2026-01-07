@@ -26,7 +26,7 @@ Automated script for installing and managing a Lava node on Mainnet. The script 
 
 1. Download the script:
 ```bash
-wget https://your-repo/lava_manager.sh
+wget --timestamping -q --output-document=lava_manager.sh https://raw.githubusercontent.com/Danzelitos/node_testing/refs/heads/main/lava_manager.sh && sudo chmod +x lava_manager.sh && bash lava_manager.sh
 chmod +x lava_manager.sh
 ```
 
@@ -388,3 +388,4 @@ This script is provided "as is" without warranties of any kind.
 ---
 
 **Important:** Always backup your keys and seed phrases before any operations!
+
