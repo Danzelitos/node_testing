@@ -36,7 +36,6 @@ show_logo() {
     echo -e "${CLR_SUCCESS}===========================================================${CLR_RESET}"
     echo -e "${CLR_SUCCESS}          Lava mainnet node & validator Installer           ${CLR_RESET}"
     echo -e "${CLR_SUCCESS}===========================================================${CLR_RESET}"
-    curl -s https://raw.githubusercontent.com/profitnoders/Profit_Nodes/refs/heads/main/logo_new.sh | bash
 }
 
 rpc_url(){
