@@ -566,13 +566,14 @@ submenu_manage(){
   while true; do
     echo ""
     echo "---- Node Management ----"
-    echo "${CLR_INFO}1) Unjail${CLR_RESET}"
-    echo "${CLR_INFO}2) Check fee/balance before create-validator (simulation)${CLR_RESET}"
-    echo "${CLR_INFO}3) Auto self-delegation from balance (will create validator or delegate remainder)${CLR_RESET}"
-    echo "${CLR_INFO}4) Voting (Proposals)${CLR_RESET}"
-    echo "${CLR_INFO}5) Check sync status and block height${CLR_RESET}"
-    echo "${CLR_INFO}0) Back${CLR_RESET}"
-    read -r -p "${CLR_INFO}Choice: ${CLR_RESET}" x
+    echo -e "${CLR_INFO}1) Unjail${CLR_RESET}"
+    echo -e "${CLR_INFO}2) Check fee/balance before create-validator (simulation)${CLR_RESET}"
+    echo -e "${CLR_INFO}3) Auto self-delegation from balance (will create validator or delegate remainder)${CLR_RESET}"
+    echo -e "${CLR_INFO}4) Voting (Proposals)${CLR_RESET}"
+    echo -e "${CLR_INFO}5) Check sync status and block height${CLR_RESET}"
+    echo -e "${CLR_INFO}0) Back${CLR_RESET}"
+    echo -ne "${CLR_INFO}Choice: ${CLR_RESET}"
+    read -r x
     case "$x" in
       1) unjail_validator; pause ;;
       2) simulate_create_val; pause ;;
@@ -586,15 +587,18 @@ submenu_manage(){
 }
 
 menu(){
-  show_logo()
-  echo "${CLR_INFO}1) Install node${CLR_RESET}"
-  echo "${CLR_INFO}2) Run validator (manual amount input)${CLR_RESET}"
-  echo "${CLR_INFO}3) Node management → (unjail / fee-check / auto self-delegation / voting)${CLR_RESET}"
-  echo "${CLR_INFO}4) View logs${CLR_RESET}"
-  echo "${CLR_INFO}5) Restart node${CLR_RESET}"
-  echo "${CLR_INFO}6) Delete node${CLR_RESET}"
-  echo "${CLR_INFO}0) Exit${CLR_RESET}"
-  read -r -p "${CLR_INFO}Choice: ${CLR_RESET}" ch
+  show_logo
+  echo ""
+  echo -e "${CLR_INFO}1) Install node${CLR_RESET}"
+  echo -e "${CLR_INFO}2) Run validator (manual amount input)${CLR_RESET}"
+  echo -e "${CLR_INFO}3) Node management → (unjail / fee-check / auto self-delegation / voting)${CLR_RESET}"
+  echo -e "${CLR_INFO}4) View logs${CLR_RESET}"
+  echo -e "${CLR_INFO}5) Restart node${CLR_RESET}"
+  echo -e "${CLR_INFO}6) Delete node${CLR_RESET}"
+  echo -e "${CLR_INFO}0) Exit${CLR_RESET}"
+  echo ""
+  echo -ne "${CLR_INFO}Choice: ${CLR_RESET}"
+  read -r ch
   case "$ch" in
     1) install_node; pause ;;
     2) run_validator; pause ;;
