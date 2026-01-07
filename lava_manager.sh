@@ -32,6 +32,13 @@ warn(){ echo -e "${CLR_WARNING}⚠${CLR_RESET} $*"; }
 pause(){ read -r -p "Press [Enter] to continue..."; }
 need_cmd(){ command -v "$1" >/dev/null 2>&1; }
 
+show_logo() {
+    echo -e "${CLR_SUCCESS}===========================================================${CLR_RESET}"
+    echo -e "${CLR_SUCCESS}          Lava mainnet node & validator Installer           ${CLR_RESET}"
+    echo -e "${CLR_SUCCESS}===========================================================${CLR_RESET}"
+    curl -s https://raw.githubusercontent.com/profitnoders/Profit_Nodes/refs/heads/main/logo_new.sh | bash
+}
+
 rpc_url(){
   # return local RPC if alive, otherwise public
   if curl -sS --max-time 1 http://127.0.0.1:26657/status >/dev/null; then
@@ -459,6 +466,82 @@ list_and_vote(){
     | jq '{proposal_id, voter, options}' || true
 }
 
+check_sync_status(){
+  local LOCAL_RPC="http://127.0.0.1:26657"
+  local local_status public_status local_height public_height catching_up sync_percent
+  
+  msg "Checking node synchronization status..."
+  echo ""
+  
+  # Check local node
+  if curl -sS --max-time 2 "$LOCAL_RPC/status" >/dev/null 2>&1; then
+    local_status=$(curl -sS "$LOCAL_RPC/status" 2>/dev/null)
+    if [ -n "$local_status" ]; then
+      local_height=$(echo "$local_status" | jq -r '.result.sync_info.latest_block_height // "N/A"' 2>/dev/null)
+      catching_up=$(echo "$local_status" | jq -r '.result.sync_info.catching_up // "N/A"' 2>/dev/null)
+      
+      echo -e "${CLR_INFO}Local Node:${CLR_RESET}"
+      echo "  Block Height: $local_height"
+      echo "  Catching Up: $catching_up"
+      echo ""
+    else
+      warn "Could not get local node status"
+    fi
+  else
+    warn "Local RPC is not available (node may be stopped)"
+    echo ""
+  fi
+  
+  # Check public network
+  if curl -sS --max-time 5 "$PUBLIC_RPC/status" >/dev/null 2>&1; then
+    public_status=$(curl -sS "$PUBLIC_RPC/status" 2>/dev/null)
+    if [ -n "$public_status" ]; then
+      public_height=$(echo "$public_status" | jq -r '.result.sync_info.latest_block_height // "N/A"' 2>/dev/null)
+      
+      echo -e "${CLR_INFO}Network (Public RPC):${CLR_RESET}"
+      echo "  Block Height: $public_height"
+      echo ""
+      
+      # Calculate sync percentage if both heights are available
+      if [ "$local_height" != "N/A" ] && [ "$public_height" != "N/A" ] && [ -n "$local_height" ] && [ -n "$public_height" ]; then
+        if [ "$public_height" -gt 0 ] 2>/dev/null; then
+          sync_percent=$(awk -v local="$local_height" -v public="$public_height" 'BEGIN {
+            if (public > 0) {
+              percent = (local / public) * 100
+              printf "%.2f", percent
+            } else {
+              print "0.00"
+            }
+          }')
+          echo -e "${CLR_INFO}Sync Status:${CLR_RESET}"
+          echo "  Progress: ${sync_percent}%"
+          echo "  Blocks behind: $((public_height - local_height))"
+          echo ""
+          
+          if [ "$catching_up" = "false" ]; then
+            ok "Node is fully synchronized"
+          elif [ "$catching_up" = "true" ]; then
+            warn "Node is still syncing"
+          fi
+        fi
+      fi
+    else
+      warn "Could not get network status from public RPC"
+    fi
+  else
+    warn "Public RPC is not available"
+  fi
+  
+  echo ""
+  msg "Additional Info:"
+  if [ "$catching_up" = "false" ]; then
+    ok "Node is ready for validator operations"
+  elif [ "$catching_up" = "true" ]; then
+    warn "Wait for full synchronization before creating validator"
+  fi
+}
+
+
 show_logs(){ 
   journalctl -u lava -f -o cat || true
   }
@@ -483,17 +566,19 @@ submenu_manage(){
   while true; do
     echo ""
     echo "---- Node Management ----"
-    echo "1) Unjail"
-    echo "2) Check fee/balance before create-validator (simulation)"
-    echo "3) Auto self-delegation from balance (will create validator or delegate remainder)"
-    echo "4) Voting (Proposals)"
-    echo "0) Back"
-    read -r -p "Choice: " x
+    echo "${CLR_INFO}1) Unjail${CLR_RESET}"
+    echo "${CLR_INFO}2) Check fee/balance before create-validator (simulation)${CLR_RESET}"
+    echo "${CLR_INFO}3) Auto self-delegation from balance (will create validator or delegate remainder)${CLR_RESET}"
+    echo "${CLR_INFO}4) Voting (Proposals)${CLR_RESET}"
+    echo "${CLR_INFO}5) Check sync status and block height${CLR_RESET}"
+    echo "${CLR_INFO}0) Back${CLR_RESET}"
+    read -r -p "${CLR_INFO}Choice: ${CLR_RESET}" x
     case "$x" in
       1) unjail_validator; pause ;;
       2) simulate_create_val; pause ;;
       3) auto_self_amount; pause ;;
       4) list_and_vote; pause ;;
+      5) check_sync_status; pause ;;
       0) break ;;
       *) warn "Invalid choice" ; pause ;;
     esac
@@ -503,14 +588,14 @@ submenu_manage(){
 menu(){
   echo ""
   echo "===== Lava Mainnet Manager (${LAVA_VERSION}) ====="
-  echo "1) Install node"
-  echo "2) Run validator (manual amount input)"
-  echo "3) Node management → (unjail / fee-check / auto self-delegation / voting)"
-  echo "4) View logs"
-  echo "5) Restart node"
-  echo "6) Delete node"
-  echo "0) Exit"
-  read -r -p "Choice: " ch
+  echo "${CLR_INFO}1) Install node${CLR_RESET}"
+  echo "${CLR_INFO}2) Run validator (manual amount input)${CLR_RESET}"
+  echo "${CLR_INFO}3) Node management → (unjail / fee-check / auto self-delegation / voting)${CLR_RESET}"
+  echo "${CLR_INFO}4) View logs${CLR_RESET}"
+  echo "${CLR_INFO}5) Restart node${CLR_RESET}"
+  echo "${CLR_INFO}6) Delete node${CLR_RESET}"
+  echo "${CLR_INFO}0) Exit${CLR_RESET}"
+  read -r -p "${CLR_INFO}Choice: ${CLR_RESET}" ch
   case "$ch" in
     1) install_node; pause ;;
     2) run_validator; pause ;;
